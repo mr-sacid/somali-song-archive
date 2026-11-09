@@ -14,7 +14,7 @@ somali: |
 
   Eelkad wadnaha
   Ku abuurtay baa
-  Abid iga go’ayn
+  Abid iga bogsoon
   Naf ku aamintaa
   Sida eridhaban
   Deyn weydey olol
@@ -69,7 +69,7 @@ english: |
 
   The wound that you
   Made in my heart
-  Will never leave me
+  Will never heal in me
   A soul that trusted you
   Like a mother camel parted from her calf
   Cannot cease its crying
@@ -82,8 +82,8 @@ english: |
 
   The light of my eyes
   If you were not
-  Running tears and
-  Crying would never cease from them
+  My running tears and
+  Crying I could never have stopped
 
   The terror and
   The lingering ache of love
@@ -138,7 +138,7 @@ The song has several words for the inner self. *Uur* is the belly or womb, where
 
 Lovesickness as a real illness is an old theme in Somali love poetry. Its best-known figure is Cilmi Boodhari, the poet of Berbera who is said to have died of love. Here the old theme sits beside a modern word, *unugyo*, the cells of the body.
 
-The middle verses carry the same illness further. He is the light of her eyes; were he not, their tears and crying would never cease. What love has given her is terror and *arami*: the deep ache of an old wound or illness that settles in and flares up again. It answers the wound, *eel*, of the opening verses. The first is the injury; this is the pain that stays long after.
+The middle verses carry the same illness further. He is the light of her eyes; were he not, she could never have stopped her tears and crying. What love has given her is terror and *arami*: the deep ache of an old wound or illness that settles in and flares up again. It answers the wound, *eel*, of the opening verses. The first is the injury; this is the pain that stays long after.
 
 It has also made her lose her way. She wanders the *ay*, the dense bush, and asks him what he would say the reason is. The song has already given the answer: it is on his account.
 
