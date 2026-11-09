@@ -1,0 +1,24 @@
+---
+import { link, type Song } from '../lib/songs';
+
+interface Props {
+  song: Song;
+  index: number;
+}
+const { song, index } = Astro.props;
+const d = song.data;
+---
+
+<a class="row" href={link(`/songs/${song.id}/`)}>
+  <span class="num">{String(index + 1).padStart(2, '0')}</span>
+  <span class="title">
+    <span class="so" lang="so" transition:name={`title-${song.id}`}>{d.title}</span>
+    {d.title_en && <span class="en">{d.title_en}</span>}
+  </span>
+  <span class="meta">
+    <span>{d.poet}{d.singer && ` · ${d.singer}`}</span>
+    <span>{d.genre}</span>
+    <span>{d.year ?? '—'}</span>
+  </span>
+  <span class="arrow" aria-hidden="true">→</span>
+</a>

@@ -1,5 +1,9 @@
 ---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/inter';
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { link } from '../lib/songs';
 
 interface Props {
@@ -11,6 +15,7 @@ const siteName = 'Kaydka Suugaanta';
 const { title, description = 'An archive of Somali songs and poems, with English translations.' } =
   Astro.props;
 const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Somali Song & Poetry Archive`;
+const inArchive = Astro.url.pathname.includes('/songs');
 ---
 
 <!doctype html>
@@ -21,28 +26,76 @@ const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Somali Son
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={link('/favicon.svg')} />
+    <script is:inline>
+      (() => {
+        const apply = () => {
+          const root = document.documentElement;
+          root.classList.add('js');
+          try {
+            const theme = localStorage.getItem('theme');
+            if (theme) root.dataset.theme = theme;
+          } catch {}
+        };
+        apply();
+        document.addEventListener('astro:after-swap', apply);
+      })();
+    </script>
+    <ClientRouter />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap">
-        <a class="brand" href={link('/')}>
-          <span class="brand-so" lang="so">{siteName}</span>
-          <span class="brand-en">Somali Song &amp; Poetry Archive</span>
-        </a>
+        <a class="brand" href={link('/')} lang="so">Kaydka Suugaanta<i>.</i></a>
         <nav aria-label="Main">
-          <a href={link('/')}>Home</a>
-          <a href={link('/songs/')}>Songs &amp; poems</a>
+          <a class="ul" href={link('/songs/')} aria-current={inArchive ? 'page' : undefined}>Archive</a>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch between light and dark">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M8 1a7 7 0 0 1 0 14z" fill="currentColor"></path>
+            </svg>
+          </button>
         </nav>
       </div>
     </header>
-    <main id="main" class="wrap">
+    <main id="main">
       <slot />
     </main>
     <footer class="site-footer">
       <div class="wrap">
-        <p>Texts remain the work of their poets and singers. Translations and notes by the archive.</p>
+        <p>Texts remain the work of their poets and singers.</p>
+        <p>Translations and notes by the archive.</p>
       </div>
     </footer>
   </body>
 </html>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Light / dark toggle
+    document.querySelector('#theme-toggle')?.addEventListener('click', () => {
+      const root = document.documentElement;
+      const isDark = root.dataset.theme
+        ? root.dataset.theme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      const next = isDark ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
+    );
+    document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+  });
+</script>

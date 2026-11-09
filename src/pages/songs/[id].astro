@@ -5,13 +5,18 @@ import { decadeOf, getSongs, link, stanzas, type Song } from '../../lib/songs';
 
 export async function getStaticPaths() {
   const songs = await getSongs();
-  return songs.map((song) => ({ params: { id: song.id }, props: { song } }));
+  return songs.map((song, i) => ({
+    params: { id: song.id },
+    props: { song, prev: songs[i - 1], next: songs[i + 1] },
+  }));
 }
 
 interface Props {
   song: Song;
+  prev?: Song;
+  next?: Song;
 }
-const { song } = Astro.props;
+const { song, prev, next } = Astro.props;
 const d = song.data;
 const { Content } = await render(song);
 
@@ -27,72 +32,96 @@ const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
 ---
 
 <Base title={d.title} description={d.title_en ? `${d.title} (${d.title_en}) by ${d.poet}` : `${d.title} by ${d.poet}`}>
-  <a class="back" href={link('/songs/')}>← All songs &amp; poems</a>
-
-  <header class="song-header">
-    <h1 lang="so">{d.title}</h1>
-    {d.title_en && <p class="en-title">{d.title_en}</p>}
-    <dl class="facts">
-      <div>
-        <dt>Poet</dt>
-        <dd><a href={filterLink('poet', d.poet)}>{d.poet}</a></dd>
-      </div>
-      {
-        d.singer && (
-          <div>
-            <dt>Singer</dt>
-            <dd><a href={filterLink('singer', d.singer)}>{d.singer}</a></dd>
-          </div>
-        )
-      }
-      <div>
-        <dt>Genre</dt>
-        <dd><a href={filterLink('genre', d.genre)}>{d.genre}</a></dd>
-      </div>
-      {
-        d.year && (
-          <div>
-            <dt>Year</dt>
-            <dd><a href={filterLink('decade', decadeOf(d.year))}>{d.year}</a></dd>
-          </div>
-        )
-      }
-      {
-        d.themes.length > 0 && (
-          <div>
-            <dt>Themes</dt>
-            <dd>
-              {d.themes.map((t, i) => <>{i > 0 && ', '}<a href={filterLink('theme', t)}>{t}</a></>)}
-            </dd>
-          </div>
-        )
-      }
-    </dl>
-  </header>
-
-  <section class="verses" aria-label="Text and translation">
-    <div class="row head" aria-hidden="true">
-      <p class="so">Af-Soomaali</p>
-      <p class="en">English</p>
-    </div>
-    {
-      rows.map((row) => (
-        <div class="row">
-          <p class="so" lang="so">{row.so}</p>
-          <p class="en">{row.en}</p>
+  <article class="wrap">
+    <header class="song-head">
+      <a class="back ul rise" href={link('/songs/')}>← Archive</a>
+      <h1 class="display" lang="so" transition:name={`title-${song.id}`}>{d.title}</h1>
+      {d.title_en && <p class="en-title rise" style="--i:1">{d.title_en}</p>}
+      <dl class="facts rise" style="--i:2">
+        <div>
+          <dt class="eyebrow">Poet</dt>
+          <dd><a class="ul on" href={filterLink('poet', d.poet)}>{d.poet}</a></dd>
         </div>
-      ))
-    }
-  </section>
+        {
+          d.singer && (
+            <div>
+              <dt class="eyebrow">Singer</dt>
+              <dd><a class="ul on" href={filterLink('singer', d.singer)}>{d.singer}</a></dd>
+            </div>
+          )
+        }
+        <div>
+          <dt class="eyebrow">Genre</dt>
+          <dd><a class="ul on" href={filterLink('genre', d.genre)}>{d.genre}</a></dd>
+        </div>
+        {
+          d.year && (
+            <div>
+              <dt class="eyebrow">Year</dt>
+              <dd><a class="ul on" href={filterLink('decade', decadeOf(d.year))}>{d.year}</a></dd>
+            </div>
+          )
+        }
+        {
+          d.themes.length > 0 && (
+            <div>
+              <dt class="eyebrow">Themes</dt>
+              <dd>
+                {d.themes.map((t, i) => <>{i > 0 && ', '}<a class="ul on" href={filterLink('theme', t)}>{t}</a></>)}
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+    </header>
 
-  {
-    hasNotes && (
-      <section class="notes">
-        <h2>Notes</h2>
-        <Content />
-        {d.translator && <p class="credit">Translated by {d.translator}.</p>}
-        {d.source && <p class="credit">Source: {d.source}</p>}
-      </section>
-    )
-  }
+    <section class="verses" aria-label="Text and translation">
+      <div class="labels eyebrow" aria-hidden="true">
+        <span></span>
+        <span>Af-Soomaali</span>
+        <span>English</span>
+      </div>
+      {
+        rows.map((row, i) => (
+          <div class="stanza" data-reveal>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <p class="so" lang="so">{row.so}</p>
+            <p class="en">{row.en}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      hasNotes && (
+        <section class="notes section" data-reveal>
+          <h2 class="eyebrow">Notes</h2>
+          <div class="body">
+            <Content />
+            {d.translator && <p class="credit">Translated by {d.translator}.</p>}
+            {d.source && <p class="credit">Source: {d.source}</p>}
+          </div>
+        </section>
+      )
+    }
+
+    <nav class="pager" aria-label="More entries">
+      {
+        prev && (
+          <a class="prev" href={link(`/songs/${prev.id}/`)}>
+            <span class="eyebrow">← Previous</span>
+            <strong lang="so">{prev.data.title}</strong>
+          </a>
+        )
+      }
+      {
+        next && (
+          <a class="next" href={link(`/songs/${next.id}/`)}>
+            <span class="eyebrow">Next →</span>
+            <strong lang="so">{next.data.title}</strong>
+          </a>
+        )
+      }
+    </nav>
+  </article>
 </Base>

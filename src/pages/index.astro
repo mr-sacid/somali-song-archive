@@ -1,50 +1,129 @@
 ---
 import Base from '../layouts/Base.astro';
-import SongCard from '../components/SongCard.astro';
-import { getSongs, link, unique } from '../lib/songs';
+import SongRow from '../components/SongRow.astro';
+import { getSongs, link, stanzas, unique } from '../lib/songs';
 
 const songs = await getSongs();
 const poets = unique(songs.map((s) => s.data.poet));
 const singers = unique(songs.map((s) => s.data.singer));
 const genres = unique(songs.map((s) => s.data.genre));
 const themes = unique(songs.flatMap((s) => s.data.themes));
+
 const filterLink = (key: string, value: string) =>
   link(`/songs/?${key}=${encodeURIComponent(value)}`);
+const countBy = (test: (s: (typeof songs)[number]) => boolean) => songs.filter(test).length;
+
+// A verse to feature: the opening stanza of the first translated entry.
+const featured = songs.find((s) => s.data.english);
+const marquee = [...genres, ...themes];
 ---
 
 <Base>
-  <section class="hero">
-    <h1>Somali songs and poems, kept and translated</h1>
-    <p>
-      An archive of heeso, gabayo and buraanbur. Each text is shown in Somali beside its English
-      translation, with notes on the poet, the singer and the story behind it.
+  <section class="wrap hero">
+    <p class="eyebrow rise">Somali song &amp; poetry archive</p>
+    <h1 class="display">
+      <span class="line"><span style="--i:1">Songs and poems,</span></span>
+      <span class="line"><span style="--i:2"><em>kept</em> and translated.</span></span>
+    </h1>
+    <p class="lead rise" style="--i:4">
+      Heeso, gabayo and buraanbur, each shown in Somali beside its English translation, with notes
+      on the poet, the singer and the story behind it.
     </p>
-    <a class="button" href={link('/songs/')}>Browse the archive</a>
+    <a class="cta rise" style="--i:5" href={link('/songs/')}>
+      Browse the archive <span aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <div class="marquee rise" style="--i:6" aria-hidden="true">
+    <div class="track">
+      {
+        [0, 1].map(() => (
+          <ul>
+            {[...marquee, ...marquee, ...marquee].map((word) => (
+              <li>{word}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+
+  <section class="wrap section">
     <ul class="stats">
-      <li><strong>{songs.length}</strong>entries</li>
-      <li><strong>{poets.length}</strong>poets</li>
-      <li><strong>{singers.length}</strong>singers</li>
+      <li data-reveal>
+        <strong>{songs.length}</strong>
+        <span class="eyebrow">Entries</span>
+      </li>
+      <li data-reveal style="--i:1">
+        <strong>{poets.length}</strong>
+        <span class="eyebrow">Poets</span>
+      </li>
+      <li data-reveal style="--i:2">
+        <strong>{singers.length}</strong>
+        <span class="eyebrow">Singers</span>
+      </li>
     </ul>
   </section>
 
-  <section>
-    <h2>By genre</h2>
-    <ul class="chips">
-      {genres.map((g) => <li><a href={filterLink('genre', g)}>{g}</a></li>)}
+  {
+    featured && (
+      <section class="wrap section feature" data-reveal>
+        <p class="eyebrow">A verse from the archive</p>
+        <blockquote lang="so">{stanzas(featured.data.somali)[0]}</blockquote>
+        <p class="trans">{stanzas(featured.data.english)[0]}</p>
+        <a class="ul on by" href={link(`/songs/${featured.id}/`)}>
+          {featured.data.title}, {featured.data.poet} →
+        </a>
+      </section>
+    )
+  }
+
+  <section class="wrap section">
+    <div class="section-head" data-reveal>
+      <h2 class="eyebrow">From the archive</h2>
+      <a class="ul on" href={link('/songs/')}>View all</a>
+    </div>
+    <ul class="rows">
+      {
+        songs.slice(0, 6).map((song, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <SongRow song={song} index={i} />
+          </li>
+        ))
+      }
     </ul>
   </section>
 
-  <section>
-    <h2>By theme</h2>
-    <ul class="chips">
-      {themes.map((t) => <li><a href={filterLink('theme', t)}>{t}</a></li>)}
-    </ul>
-  </section>
-
-  <section>
-    <h2>From the archive</h2>
-    <ul class="song-list">
-      {songs.slice(0, 6).map((song) => <li><SongCard song={song} /></li>)}
-    </ul>
+  <section class="wrap section browse">
+    <div data-reveal>
+      <h2 class="eyebrow">Browse by genre</h2>
+      <ul>
+        {
+          genres.map((g) => (
+            <li>
+              <a href={filterLink('genre', g)}>
+                {g}
+                <sup>{countBy((s) => s.data.genre === g)}</sup>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div data-reveal style="--i:1">
+      <h2 class="eyebrow">Browse by theme</h2>
+      <ul>
+        {
+          themes.map((t) => (
+            <li>
+              <a href={filterLink('theme', t)}>
+                {t}
+                <sup>{countBy((s) => s.data.themes.includes(t))}</sup>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </section>
 </Base>
