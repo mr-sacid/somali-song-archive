@@ -7,8 +7,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 /** Prefix an internal path with the site's base (needed on GitHub Pages). */
 export const link = (path: string) => `${base}${path}`;
 
-export const decadeOf = (year?: number) =>
-  year ? `${Math.floor(year / 10) * 10}s` : 'Unknown';
+export const decadeOf = (d: { year?: number; decade?: string }) =>
+  d.year ? `${Math.floor(d.year / 10) * 10}s` : (d.decade ?? 'Unknown');
 
 export async function getSongs(): Promise<Song[]> {
   const songs = await getCollection('songs');

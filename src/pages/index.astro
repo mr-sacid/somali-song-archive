@@ -52,15 +52,15 @@ const marquee = [...genres, ...themes];
     <ul class="stats">
       <li data-reveal>
         <strong>{songs.length}</strong>
-        <span class="eyebrow">Entries</span>
+        <span class="eyebrow">{songs.length === 1 ? 'Entry' : 'Entries'}</span>
       </li>
       <li data-reveal style="--i:1">
         <strong>{poets.length}</strong>
-        <span class="eyebrow">Poets</span>
+        <span class="eyebrow">{poets.length === 1 ? 'Poet' : 'Poets'}</span>
       </li>
       <li data-reveal style="--i:2">
         <strong>{singers.length}</strong>
-        <span class="eyebrow">Singers</span>
+        <span class="eyebrow">{singers.length === 1 ? 'Singer' : 'Singers'}</span>
       </li>
     </ul>
   </section>

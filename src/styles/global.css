@@ -710,6 +710,21 @@ a {
 .notes .body p + p {
   margin-top: 1em;
 }
+.notes .body h3 {
+  margin: 2.75rem 0 0.9rem;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.notes .body h3:first-child {
+  margin-top: 0;
+}
+.notes .body em {
+  font-family: var(--serif);
+  font-size: 1.08em;
+}
 .notes .body a {
   color: var(--accent);
 }

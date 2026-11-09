@@ -8,7 +8,7 @@ const filters = [
   { key: 'poet', label: 'Poet', options: unique(songs.map((s) => s.data.poet)) },
   { key: 'singer', label: 'Singer', options: unique(songs.map((s) => s.data.singer)) },
   { key: 'genre', label: 'Genre', options: unique(songs.map((s) => s.data.genre)) },
-  { key: 'decade', label: 'Decade', options: unique(songs.map((s) => decadeOf(s.data.year))) },
+  { key: 'decade', label: 'Decade', options: unique(songs.map((s) => decadeOf(s.data))) },
   { key: 'theme', label: 'Theme', options: unique(songs.flatMap((s) => s.data.themes)) },
 ];
 ---
@@ -46,7 +46,7 @@ const filters = [
             data-poet={song.data.poet}
             data-singer={song.data.singer ?? ''}
             data-genre={song.data.genre}
-            data-decade={decadeOf(song.data.year)}
+            data-decade={decadeOf(song.data)}
             data-theme={song.data.themes.join('|')}
           >
             <SongRow song={song} index={i} />

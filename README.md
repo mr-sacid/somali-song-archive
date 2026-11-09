@@ -21,6 +21,7 @@ poet: Name of poet             # required
 singer: Name of singer         # leave out for poems that were never sung
 genre: Hees                    # required: Hees, Gabay, Buraanbur, Geeraar, Jiifto...
 year: 1974                     # the decade filter is worked out from this
+decade: 1980s                  # use instead of year when the exact year is unknown
 themes: [Love, Homeland]
 translator: Name
 source: Where the text came from

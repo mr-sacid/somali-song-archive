@@ -18,7 +18,7 @@ const d = song.data;
   <span class="meta">
     <span>{d.poet}{d.singer && ` · ${d.singer}`}</span>
     <span>{d.genre}</span>
-    <span>{d.year ?? '—'}</span>
+    <span>{d.year ?? d.decade ?? '—'}</span>
   </span>
   <span class="arrow" aria-hidden="true">→</span>
 </a>

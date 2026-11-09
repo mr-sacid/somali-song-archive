@@ -13,6 +13,7 @@ const songs = defineCollection({
     singer: z.string().optional(), // omit for poems that were never sung
     genre: z.string(), // e.g. Hees, Gabay, Buraanbur, Geeraar, Jiifto
     year: z.number().int().optional(), // decade is derived from this
+    decade: z.string().optional(), // e.g. "1980s"; use when the exact year is unknown
     themes: z.array(z.string()).default([]),
     somali: z.string(), // stanzas separated by a blank line
     english: z.string().optional(), // same stanza breaks as the Somali

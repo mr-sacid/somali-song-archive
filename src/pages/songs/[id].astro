@@ -55,10 +55,10 @@ const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
           <dd><a class="ul on" href={filterLink('genre', d.genre)}>{d.genre}</a></dd>
         </div>
         {
-          d.year && (
+          (d.year || d.decade) && (
             <div>
-              <dt class="eyebrow">Year</dt>
-              <dd><a class="ul on" href={filterLink('decade', decadeOf(d.year))}>{d.year}</a></dd>
+              <dt class="eyebrow">{d.year ? 'Year' : 'Decade'}</dt>
+              <dd><a class="ul on" href={filterLink('decade', decadeOf(d))}>{d.year ?? d.decade}</a></dd>
             </div>
           )
         }
