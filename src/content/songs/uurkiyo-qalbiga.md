@@ -25,6 +25,24 @@ somali: |
   In aan kuu tirshee
   Aayatin ku waar.
 
+  Nuurkii indhaha
+  Hadii aadhan aheyn
+  Ilma socoto iyo
+  Ohin kama go’een
+
+  Argagaxisadiyo
+  Aramida jaceyl
+  Waa aawadaa
+  Anbadayee waxaan
+  Ayda umaree
+  Maxaad oran lahayd
+
+  Aragiisa kaan ku ildogsadow ×2
+  Amaan iyo ducaba ×3
+  Waad istaahishaa
+  In aan kuu tirshee
+  Aayatin ku waar.
+
   Anba maalintan
   Ku arkaa jaceyl
   Unugyada jirkiyo
@@ -55,6 +73,24 @@ english: |
   A soul that trusted you
   Like a mother camel parted from her calf
   Cannot cease its crying
+
+  You, the sight of whom refreshes my eyes ×2
+  Praise and prayer alike ×3
+  You are worthy
+  That I recite them for you
+  May your future be a lasting one.
+
+  The light of my eyes
+  If you were not
+  Running tears and
+  Crying would never cease from them
+
+  The terror and
+  The lingering ache of love
+  Are on your account
+  I have gone astray; and why I
+  Wander the wilderness
+  What would you say?
 
   You, the sight of whom refreshes my eyes ×2
   Praise and prayer alike ×3
@@ -102,6 +138,10 @@ The song has several words for the inner self. *Uur* is the belly or womb, where
 
 Lovesickness as a real illness is an old theme in Somali love poetry. Its best-known figure is Cilmi Boodhari, the poet of Berbera who is said to have died of love. Here the old theme sits beside a modern word, *unugyo*, the cells of the body.
 
+The middle verses carry the same illness further. He is the light of her eyes; were he not, their tears and crying would never cease. What love has given her is terror and *arami*: the deep ache of an old wound or illness that settles in and flares up again. It answers the wound, *eel*, of the opening verses. The first is the injury; this is the pain that stays long after.
+
+It has also made her lose her way. She wanders the *ay*, the dense bush, and asks him what he would say the reason is. The song has already given the answer: it is on his account.
+
 ### Praise, prayer and marriage
 
 The refrain offers the man *ammaan iyo duco*, praise and prayer, and asks God to accept them. She wishes him a lasting future. This places her love inside faith and good intention, and the fifth stanza makes the intention plain with *alkunto*, to seek a partner for marriage. Of all the men in the world, he is the one she has chosen.
@@ -121,6 +161,10 @@ This explains some of its rarer words. The poet needed vowel-initial words for a
 **Alkunto** is to seek a partner for the sake of marriage.
 
 **Eel** is a wound, or the painful mark one leaves behind.
+
+**Arami** is a chronic, deep-seated ache from an old wound or illness, one that flares up from time to time.
+
+**Ay** is dense forest or bushland.
 
 **Olol** is the loud bellow of a camel separated from her calf or herd.
 
