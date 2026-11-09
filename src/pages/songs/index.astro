@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import SongCard from '../../components/SongCard.astro';
+import { decadeOf, getSongs, unique } from '../../lib/songs';
+
+const songs = await getSongs();
+const filters = [
+  { key: 'poet', label: 'Poet', options: unique(songs.map((s) => s.data.poet)) },
+  { key: 'singer', label: 'Singer', options: unique(songs.map((s) => s.data.singer)) },
+  { key: 'genre', label: 'Genre', options: unique(songs.map((s) => s.data.genre)) },
+  { key: 'decade', label: 'Decade', options: unique(songs.map((s) => decadeOf(s.data.year))) },
+  { key: 'theme', label: 'Theme', options: unique(songs.flatMap((s) => s.data.themes)) },
+];
+---
+
+<Base title="Songs & poems" description="Browse the archive by poet, singer, genre, decade and theme.">
+  <h1>Songs &amp; poems</h1>
+
+  <form class="filters" id="filters" aria-label="Filter entries">
+    {
+      filters.map((f) => (
+        <label>
+          {f.label}
+          <select name={f.key}>
+            <option value="">All</option>
+            {f.options.map((o) => (
+              <option value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+      ))
+    }
+    <button type="reset">Clear filters</button>
+  </form>
+
+  <p class="count" id="count" aria-live="polite">{songs.length} entries</p>
+
+  <ul class="song-list" id="songs">
+    {
+      songs.map((song) => (
+        <li
+          data-poet={song.data.poet}
+          data-singer={song.data.singer ?? ''}
+          data-genre={song.data.genre}
+          data-decade={decadeOf(song.data.year)}
+          data-theme={song.data.themes.join('|')}
+        >
+          <SongCard song={song} />
+        </li>
+      ))
+    }
+  </ul>
+  <p id="empty" hidden>No entries match these filters.</p>
+</Base>
+
+<script>
+  const keys = ['poet', 'singer', 'genre', 'decade', 'theme'] as const;
+  const form = document.querySelector<HTMLFormElement>('#filters')!;
+  const items = [...document.querySelectorAll<HTMLLIElement>('#songs > li')];
+  const count = document.querySelector('#count')!;
+  const empty = document.querySelector<HTMLElement>('#empty')!;
+  const select = (key: string) => form.elements.namedItem(key) as HTMLSelectElement;
+
+  // Pre-select filters from the URL, e.g. /songs/?genre=Gabay
+  const params = new URLSearchParams(location.search);
+  for (const key of keys) {
+    const value = params.get(key);
+    if (value && [...select(key).options].some((o) => o.value === value)) {
+      select(key).value = value;
+    }
+  }
+
+  function apply() {
+    const active = keys.map((key) => [key, select(key).value] as const).filter(([, v]) => v);
+    let shown = 0;
+    for (const item of items) {
+      const match = active.every(([key, value]) =>
+        key === 'theme'
+          ? (item.dataset.theme ?? '').split('|').includes(value)
+          : item.dataset[key] === value,
+      );
+      item.hidden = !match;
+      if (match) shown++;
+    }
+    count.textContent = `${shown} ${shown === 1 ? 'entry' : 'entries'}`;
+    empty.hidden = shown > 0;
+
+    const query = new URLSearchParams(active.map(([k, v]) => [k, v])).toString();
+    history.replaceState(null, '', query ? `?${query}` : location.pathname);
+  }
+
+  form.addEventListener('change', apply);
+  form.addEventListener('reset', () => setTimeout(apply));
+  apply();
+</script>

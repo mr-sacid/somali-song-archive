@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import SongCard from '../components/SongCard.astro';
+import { getSongs, link, unique } from '../lib/songs';
+
+const songs = await getSongs();
+const poets = unique(songs.map((s) => s.data.poet));
+const singers = unique(songs.map((s) => s.data.singer));
+const genres = unique(songs.map((s) => s.data.genre));
+const themes = unique(songs.flatMap((s) => s.data.themes));
+const filterLink = (key: string, value: string) =>
+  link(`/songs/?${key}=${encodeURIComponent(value)}`);
+---
+
+<Base>
+  <section class="hero">
+    <h1>Somali songs and poems, kept and translated</h1>
+    <p>
+      An archive of heeso, gabayo and buraanbur. Each text is shown in Somali beside its English
+      translation, with notes on the poet, the singer and the story behind it.
+    </p>
+    <a class="button" href={link('/songs/')}>Browse the archive</a>
+    <ul class="stats">
+      <li><strong>{songs.length}</strong>entries</li>
+      <li><strong>{poets.length}</strong>poets</li>
+      <li><strong>{singers.length}</strong>singers</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>By genre</h2>
+    <ul class="chips">
+      {genres.map((g) => <li><a href={filterLink('genre', g)}>{g}</a></li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2>By theme</h2>
+    <ul class="chips">
+      {themes.map((t) => <li><a href={filterLink('theme', t)}>{t}</a></li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2>From the archive</h2>
+    <ul class="song-list">
+      {songs.slice(0, 6).map((song) => <li><SongCard song={song} /></li>)}
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import { link } from '../lib/songs';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const siteName = 'Kaydka Suugaanta';
+const { title, description = 'An archive of Somali songs and poems, with English translations.' } =
+  Astro.props;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Somali Song & Poetry Archive`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={link('/favicon.svg')} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={link('/')}>
+          <span class="brand-so" lang="so">{siteName}</span>
+          <span class="brand-en">Somali Song &amp; Poetry Archive</span>
+        </a>
+        <nav aria-label="Main">
+          <a href={link('/')}>Home</a>
+          <a href={link('/songs/')}>Songs &amp; poems</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Texts remain the work of their poets and singers. Translations and notes by the archive.</p>
+      </div>
+    </footer>
+  </body>
+</html>
