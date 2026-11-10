@@ -1,0 +1,14 @@
+---
+// Layout for plain Markdown pages such as src/pages/about.md
+import Base from './Base.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <article class="wrap prose-page">
+    <div class="prose rise">
+      <slot />
+    </div>
+  </article>
+</Base>

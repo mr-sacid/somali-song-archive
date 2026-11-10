@@ -16,6 +16,7 @@ const { title, description = 'An archive of Somali songs and poems, with English
   Astro.props;
 const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Somali Song & Poetry Archive`;
 const inArchive = Astro.url.pathname.includes('/songs');
+const inAbout = Astro.url.pathname.includes('/about');
 ---
 
 <!doctype html>
@@ -49,6 +50,7 @@ const inArchive = Astro.url.pathname.includes('/songs');
         <a class="brand" href={link('/')} lang="so">Kaydka Suugaanta<i>.</i></a>
         <nav aria-label="Main">
           <a class="ul" href={link('/songs/')} aria-current={inArchive ? 'page' : undefined}>Archive</a>
+          <a class="ul" href={link('/about/')} aria-current={inAbout ? 'page' : undefined}>About</a>
           <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch between light and dark">
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
