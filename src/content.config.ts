@@ -19,6 +19,12 @@ const songs = defineCollection({
     english: z.string().optional(), // same stanza breaks as the Somali
     translator: z.string().optional(),
     source: z.string().optional(),
+    // YouTube links, shown as a player above the text
+    videos: z.array(z.object({ url: z.string().url(), label: z.string().optional() })).default([]),
+    // References, listed at the foot of the page
+    sources: z
+      .array(z.object({ title: z.string(), url: z.string().url(), note: z.string().optional() }))
+      .default([]),
   }),
 });
 

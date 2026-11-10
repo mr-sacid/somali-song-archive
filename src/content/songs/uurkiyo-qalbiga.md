@@ -6,6 +6,27 @@ singer: Xabiiba Xassan Tooxow
 genre: Hees
 decade: 1980s
 themes: [Love, Longing]
+videos:
+  - url: https://youtu.be/Qxz9mEJAkLM
+    label: Gofadhe Lyrics
+  - url: https://youtu.be/FVsM1Vs0vfI
+    label: Bandhigga Balwo
+sources:
+  - title: "Cabdinaasir Xiddig, “Abwaan Barre Maxamed Fiidoow”, Laashin, 23 May 2023"
+    url: https://laashin.net/abwaan-barre-maxamed-fiidoow-w-q-cabdinaasir-xiddig/
+    note: Profile of the poet, in Somali. It also names other songs of his sung by Xabiiba Xassan Tooxow.
+  - title: "“Somalia's Lovesick Baker and the Girl He Never Had”, NPR, 21 June 2009"
+    url: https://www.npr.org/2009/06/21/105226981/somalias-lovesick-baker-and-the-girl-he-never-had
+    note: On Cilmi Boodhari and the story of his death.
+  - title: "Jamal Gabobe, “Elmi Bodari and the Construction of the Modern Somali Subject in a Colonial and Sufi Context”, University of Washington"
+    url: https://digital.lib.washington.edu/researchworks/handle/1773/25458
+    note: Doctoral thesis on Cilmi Boodhari.
+  - title: "“Uurkiyo Qalbiga Lyrics”, Gofadhe Lyrics, YouTube"
+    url: https://youtu.be/Qxz9mEJAkLM
+    note: Recording of the song.
+  - title: "“Heesta Uurkiyo Qalbiga”, Bandhigga Balwo, YouTube"
+    url: https://youtu.be/FVsM1Vs0vfI
+    note: Recording of the song.
 somali: |
   Uurkiyo qalbiga
   Hadii adhan ku ol
@@ -120,7 +141,7 @@ english: |
 
 ### What the song says
 
-A woman speaks to the man she loves. She begins with the wound he has left in her, moves through praise and prayer for him, and ends with a proposal: let us marry. The song is a declaration and an offer in one, and it is framed by a flower. In the first stanza she waits for him with flowers and love; in the last line she asks him to accept one from her.
+A woman speaks to the man she loves. The words are by a man, the poet Barre Maxamed Fiidoow, written for a woman's voice. She begins with the wound he has left in her, moves through praise and prayer for him, and ends with a proposal: let us marry. The song is a declaration and an offer in one, and it is framed by a flower. In the first stanza she waits for him with flowers and love; in the last line she asks him to accept one from her.
 
 ### The mother camel
 
@@ -134,9 +155,9 @@ The word for the cry is *olol*: the loud, resonant bellow a camel makes when she
 
 ### Love in the body
 
-The song has several words for the inner self. *Uur* is the belly or womb, where Somali places deep feeling. *Qalbi* is the heart as the seat of emotion, *wadne* the physical heart, and *naf* the soul or life itself. Love is not kept to one of them. It has settled in the cells of her body and in her ribcage, and it has taken away her appetite.
+The song has several words for the inner self. *Uur* is the belly or womb, where Somali places deep feeling. *Qalbi* is the heart as the seat of emotion, *wadne* the physical heart, and *naf* the soul or life itself. Love is not kept to one of them. It has settled in the cells of her body and in her ribcage, *ofaha*, and it has taken away her appetite.
 
-Lovesickness as a real illness is an old theme in Somali love poetry. Its best-known figure is Cilmi Boodhari, the poet of Berbera who is said to have died of love. Here the old theme sits beside a modern word, *unugyo*, the cells of the body.
+Lovesickness as a real illness is an old theme in Somali love poetry. Its best-known figure is Cilmi Boodhari, a baker in Berbera who composed love poems for a woman named Hodan Cabdi. He died in 1941, and it is widely believed that he died of heartbreak after she married another man. Here the old theme sits beside a modern word, *unugyada*, the cells of the body.
 
 The middle verses carry the same illness further. He is the light of her eyes; were he not, she could never have stopped her tears and crying. What love has given her is terror and *arami*: the deep ache of an old wound or illness that settles in and flares up again. It answers the wound, *eel*, of the opening verses. The first is the injury; this is the pain that stays long after.
 
@@ -144,15 +165,25 @@ It has also made her lose her way. She wanders the *ay*, the dense bush, and ask
 
 ### Praise, prayer and marriage
 
-The refrain offers the man *ammaan iyo duco*, praise and prayer, and asks God to accept them. She wishes him a lasting future. This places her love inside faith and good intention, and the fifth stanza makes the intention plain with *alkunto*, to seek a partner for marriage. Of all the men in the world, he is the one she has chosen.
+The refrain offers the man *amaan iyo duco*, praise and prayer, and asks God to accept them. She wishes him a lasting future. This places her love inside faith and good intention, and the fifth stanza makes the intention plain with *alkunto*, to seek a partner for marriage. Of all the men in the world, he is the one she has chosen.
 
 The closing proposal uses the phrase *aqal gal*. Literally it means "to enter a house", and from that it has come to mean to marry one another. The *aqal* is the portable home of the nomadic family, traditionally built by the women, and a new marriage begins with a new one. So when she says let us enter a house, she is saying let us marry.
 
 ### The sound of the song
 
-Somali verse is held together by alliteration: the main words of every line begin with the same sound, and all vowels count as one sound. This song alliterates on the vowels throughout: *uur*, *ubax*, *eel*, *abid*, *aamin*, *eridhaban*, *olol*, *il*, *ammaan*, *aayatiin*, *unug*, *oof*, *adduun*, *alkunto*, *anfaco*, *ileys*, *Alle*, *aqal*.
+Somali verse is held together by alliteration: the main words of every line begin with the same sound, and all vowels count as one sound. This song alliterates on the vowels throughout: *uur*, *ubax*, *eel*, *abid*, *aamin*, *eridhaban*, *olol*, *il*, *amaan*, *aayatin*, *unugyada*, *ofaha*, *adunyada*, *alkunto*, *anfaco*, *ileys*, *Alle*, *aqal*.
 
 This explains some of its rarer words. The poet needed vowel-initial words for a wound, a grieving animal, a search for a spouse and a loss of appetite, and found a precise one each time.
+
+### The poet
+
+Barre Maxamed Fiidoow, known as Leento, was born in 1952 in the countryside of Derri, in the Ceelbuur district of Galgaduud in central Somalia. He moved to Mogadishu as a young man, studied at a music school and went on to teach there. In 1974 he joined the Halgan troupe, where he was one of its teachers and leaders.
+
+He is a poet, musician, actor and singer, and wrote plays as well as songs, among them *Maandeeq*, written with the poet Cabdi-Qays. He was one of the poets who criticised the government of Siad Barre. He left the country during the civil war of 1991 and lived in Europe for more than twenty years before returning to Mogadishu.
+
+This was not his only song for Xabiiba Xassan Tooxow. She also sang his *Ixtiraam Gobeed* and *Ergo Dumar*.
+
+These details come from the profile by Cabdinaasir Xiddig listed in the sources.
 
 ### Words
 
@@ -170,6 +201,6 @@ This explains some of its rarer words. The poet needed vowel-initial words for a
 
 **Aqal gal** is literally to enter a house, and so to marry.
 
-**Aayatiin** is the future, or destiny.
+**Aayatin** is the future, or destiny.
 
-**Oofaha** is the ribcage.
+**Ofaha** is the ribcage.

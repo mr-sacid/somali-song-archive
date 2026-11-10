@@ -729,6 +729,163 @@ a {
   color: var(--muted);
 }
 
+.sources {
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+.sources ol {
+  margin-block: 0;
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+}
+.sources li + li {
+  margin-top: 0.9rem;
+}
+.sources li::marker {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.sources li span {
+  display: block;
+  color: var(--muted);
+}
+
+/* ---------- Video player ---------- */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+.fade {
+  animation: fade 1s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+}
+.listen {
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.listen-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  max-width: 46rem;
+  margin-bottom: 1rem;
+}
+.versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.versions button {
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: 500 0.8rem var(--sans);
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+.versions button:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.versions button[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+.player-slot {
+  max-width: 46rem;
+  aspect-ratio: 16 / 9;
+}
+.player-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #000;
+}
+.player-frame iframe,
+.poster,
+.poster img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.poster {
+  padding: 0;
+  background: #000;
+  cursor: pointer;
+}
+.poster img {
+  object-fit: cover;
+  opacity: 0.8;
+  transition:
+    opacity 0.4s,
+    scale 0.9s var(--ease);
+}
+.poster:hover img {
+  opacity: 1;
+  scale: 1.03;
+}
+.play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: scale 0.4s var(--ease);
+}
+.play::after {
+  content: '';
+  margin-left: 0.3rem;
+  border-block: 0.7rem solid transparent;
+  border-left: 1.1rem solid #fff;
+}
+.poster:hover .play {
+  scale: 1.1;
+}
+/* Docked in the corner while you read */
+.player-frame.pinned {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 30;
+  width: min(22rem, 62vw);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 14px 44px rgb(0 0 0 / 0.4);
+  animation: fade 0.4s var(--ease);
+}
+.unpin {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 2;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.7);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .pager {
   display: grid;
   grid-template-columns: 1fr 1fr;

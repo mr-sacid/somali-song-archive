@@ -25,6 +25,13 @@ decade: 1980s                  # use instead of year when the exact year is unkn
 themes: [Love, Homeland]
 translator: Name
 source: Where the text came from
+videos:                        # YouTube links, shown as a player above the text
+  - url: https://youtu.be/XXXXXXXXXXX
+    label: Name of the recording
+sources:                       # references, listed at the foot of the page
+  - title: Author, title, publisher, date
+    url: https://example.com/article
+    note: What it was used for
 somali: |
   First stanza, line one
   First stanza, line two

@@ -21,6 +21,10 @@ export const unique = (values: (string | undefined)[]) =>
     a.localeCompare(b),
   );
 
+/** Pull the video id out of any common YouTube link. */
+export const youtubeId = (url: string) =>
+  url.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([\w-]{11})/)?.[1];
+
 /** Split a text into stanzas on blank lines. */
 export const stanzas = (text = '') =>
   text

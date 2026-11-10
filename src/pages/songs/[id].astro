@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { decadeOf, getSongs, link, stanzas, type Song } from '../../lib/songs';
+import { decadeOf, getSongs, link, stanzas, youtubeId, type Song } from '../../lib/songs';
 
 export async function getStaticPaths() {
   const songs = await getSongs();
@@ -29,6 +29,9 @@ const rows = Array.from({ length: Math.max(so.length, en.length) }, (_, i) => ({
 const filterLink = (key: string, value: string) =>
   link(`/songs/?${key}=${encodeURIComponent(value)}`);
 const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
+const videos = d.videos
+  .map((v, i) => ({ id: youtubeId(v.url), label: v.label ?? `Recording ${i + 1}` }))
+  .filter((v) => v.id);
 ---
 
 <Base title={d.title} description={d.title_en ? `${d.title} (${d.title_en}) by ${d.poet}` : `${d.title} by ${d.poet}`}>
@@ -75,6 +78,36 @@ const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
       </dl>
     </header>
 
+    {
+      videos.length > 0 && (
+        <section class="listen fade" style="--i:3" data-player data-title={d.title}>
+          <div class="listen-head">
+            <h2 class="eyebrow">Listen</h2>
+            {videos.length > 1 && (
+              <div class="versions" role="group" aria-label="Choose a recording">
+                {videos.map((v, i) => (
+                  <button type="button" data-video={v.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="player-slot">
+            <div class="player-frame">
+              <button class="poster" type="button" data-video={videos[0].id} aria-label={`Play ${d.title}`}>
+                <img src={`https://i.ytimg.com/vi/${videos[0].id}/hqdefault.jpg`} alt="" />
+                <span class="play" aria-hidden="true" />
+              </button>
+              <button class="unpin" type="button" aria-label="Put the player back in its place" hidden>
+                ×
+              </button>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
     <section class="verses" aria-label="Text and translation">
       <div class="labels eyebrow" aria-hidden="true">
         <span></span>
@@ -105,6 +138,22 @@ const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
       )
     }
 
+    {
+      d.sources.length > 0 && (
+        <section class="notes sources" data-reveal>
+          <h2 class="eyebrow">Sources</h2>
+          <ol class="body">
+            {d.sources.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+                {s.note && <span>{s.note}</span>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
     <nav class="pager" aria-label="More entries">
       {
         prev && (
@@ -125,3 +174,62 @@ const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
     </nav>
   </article>
 </Base>
+
+<script>
+  // Video player: loads YouTube only when play is pressed, switches between
+  // recordings, and docks itself in the corner once you scroll down to read.
+  function initPlayer() {
+    const root = document.querySelector<HTMLElement>('[data-player]');
+    if (!root) return;
+    const slot = root.querySelector<HTMLElement>('.player-slot')!;
+    const frame = root.querySelector<HTMLElement>('.player-frame')!;
+    const unpin = root.querySelector<HTMLButtonElement>('.unpin')!;
+    const versions = [...root.querySelectorAll<HTMLButtonElement>('.versions button')];
+    let current = root.querySelector<HTMLElement>('.poster')!.dataset.video!;
+    let playing = false;
+    let mayPin = true;
+
+    function play(id: string) {
+      frame.querySelector('iframe, .poster')?.remove();
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.title = root!.dataset.title ?? 'Video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      frame.prepend(iframe);
+      playing = true;
+    }
+
+    frame.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('.poster')) play(current);
+    });
+
+    for (const button of versions) {
+      button.addEventListener('click', () => {
+        current = button.dataset.video!;
+        versions.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        if (playing) play(current);
+        else {
+          const img = frame.querySelector<HTMLImageElement>('.poster img');
+          if (img) img.src = `https://i.ytimg.com/vi/${current}/hqdefault.jpg`;
+        }
+      });
+    }
+
+    function setPinned(on: boolean) {
+      frame.classList.toggle('pinned', on);
+      unpin.hidden = !on;
+    }
+    unpin.addEventListener('click', () => {
+      mayPin = false;
+      setPinned(false);
+    });
+    // Dock once the player's place has scrolled off the top; undock when it returns.
+    const page = new AbortController();
+    const check = () => setPinned(playing && mayPin && slot.getBoundingClientRect().bottom < 0);
+    window.addEventListener('scroll', check, { passive: true, signal: page.signal });
+    document.addEventListener('astro:before-swap', () => page.abort(), { once: true });
+  }
+
+  document.addEventListener('astro:page-load', initPlayer);
+</script>
