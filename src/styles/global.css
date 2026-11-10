@@ -863,27 +863,65 @@ a {
   right: 1rem;
   bottom: 1rem;
   z-index: 30;
+  display: flex;
+  flex-direction: column;
   width: min(22rem, 62vw);
   height: auto;
-  aspect-ratio: 16 / 9;
+  background: #17110d;
   box-shadow: 0 14px 44px rgb(0 0 0 / 0.4);
   animation: fade 0.4s var(--ease);
 }
+.player-frame.pinned iframe {
+  position: static;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+/* The bar you drag the docked player by */
+.dock-bar {
+  display: none;
+}
+.player-frame.pinned .dock-bar {
+  order: -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 2rem;
+  padding-left: 0.7rem;
+  color: #f3eadb;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.player-frame.dragging .dock-bar {
+  cursor: grabbing;
+}
+.player-frame.dragging iframe {
+  pointer-events: none;
+}
+.dock-bar:focus-visible {
+  outline-offset: -2px;
+}
+.grip {
+  width: 1.4rem;
+  height: 0.55rem;
+  opacity: 0.6;
+  background: radial-gradient(circle, currentColor 1px, transparent 1.5px) 0 0 / 0.35rem 0.275rem;
+}
 .unpin {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  z-index: 2;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: rgb(0 0 0 / 0.7);
-  color: #fff;
-  font-size: 1rem;
+  background: none;
+  color: inherit;
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
+  opacity: 0.7;
+}
+.unpin:hover {
+  opacity: 1;
 }
 
 .pager {

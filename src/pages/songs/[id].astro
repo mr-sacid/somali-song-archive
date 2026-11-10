@@ -99,9 +99,15 @@ const videos = d.videos
                 <img src={`https://i.ytimg.com/vi/${videos[0].id}/hqdefault.jpg`} alt="" />
                 <span class="play" aria-hidden="true" />
               </button>
-              <button class="unpin" type="button" aria-label="Put the player back in its place" hidden>
-                ×
-              </button>
+              <div
+                class="dock-bar"
+                tabindex="0"
+                role="group"
+                aria-label="Docked player. Drag it, or use the arrow keys, to move it."
+              >
+                <span class="grip" aria-hidden="true" />
+                <button class="unpin" type="button" aria-label="Put the player back in its place">×</button>
+              </div>
             </div>
           </div>
         </section>
@@ -184,6 +190,7 @@ const videos = d.videos
     const slot = root.querySelector<HTMLElement>('.player-slot')!;
     const frame = root.querySelector<HTMLElement>('.player-frame')!;
     const unpin = root.querySelector<HTMLButtonElement>('.unpin')!;
+    const bar = root.querySelector<HTMLElement>('.dock-bar')!;
     const versions = [...root.querySelectorAll<HTMLButtonElement>('.versions button')];
     let current = root.querySelector<HTMLElement>('.poster')!.dataset.video!;
     let playing = false;
@@ -216,10 +223,68 @@ const videos = d.videos
       });
     }
 
-    function setPinned(on: boolean) {
-      frame.classList.toggle('pinned', on);
-      unpin.hidden = !on;
+    // Where the reader has dragged the docked player to; null = default corner.
+    let spot: { x: number; y: number } | null = null;
+    const clamp = (n: number, min: number, max: number) => Math.min(Math.max(n, min), Math.max(min, max));
+
+    function place() {
+      if (!spot) {
+        frame.style.left = frame.style.top = frame.style.right = frame.style.bottom = '';
+        return;
+      }
+      spot.x = clamp(spot.x, 8, document.documentElement.clientWidth - frame.offsetWidth - 8);
+      spot.y = clamp(spot.y, 8, window.innerHeight - frame.offsetHeight - 8);
+      frame.style.left = `${spot.x}px`;
+      frame.style.top = `${spot.y}px`;
+      frame.style.right = frame.style.bottom = 'auto';
     }
+
+    function setPinned(on: boolean) {
+      if (frame.classList.contains('pinned') === on) return;
+      frame.classList.toggle('pinned', on);
+      if (on) place();
+      else frame.style.left = frame.style.top = frame.style.right = frame.style.bottom = '';
+    }
+
+    // Drag the docked player by its top bar.
+    bar.addEventListener('pointerdown', (down) => {
+      if ((down.target as HTMLElement).closest('.unpin')) return;
+      const box = frame.getBoundingClientRect();
+      const grab = { x: down.clientX - box.left, y: down.clientY - box.top };
+      try {
+        bar.setPointerCapture(down.pointerId);
+      } catch {}
+      frame.classList.add('dragging');
+      const move = (e: PointerEvent) => {
+        spot = { x: e.clientX - grab.x, y: e.clientY - grab.y };
+        place();
+      };
+      const stop = () => {
+        frame.classList.remove('dragging');
+        bar.removeEventListener('pointermove', move);
+        bar.removeEventListener('pointerup', stop);
+        bar.removeEventListener('pointercancel', stop);
+      };
+      bar.addEventListener('pointermove', move);
+      bar.addEventListener('pointerup', stop);
+      bar.addEventListener('pointercancel', stop);
+    });
+
+    // Arrow keys move it too.
+    bar.addEventListener('keydown', (e) => {
+      const step: Record<string, [number, number]> = {
+        ArrowLeft: [-24, 0],
+        ArrowRight: [24, 0],
+        ArrowUp: [0, -24],
+        ArrowDown: [0, 24],
+      };
+      const by = step[e.key];
+      if (!by) return;
+      e.preventDefault();
+      const box = frame.getBoundingClientRect();
+      spot = { x: box.left + by[0], y: box.top + by[1] };
+      place();
+    });
     unpin.addEventListener('click', () => {
       mayPin = false;
       setPinned(false);
@@ -228,6 +293,9 @@ const videos = d.videos
     const page = new AbortController();
     const check = () => setPinned(playing && mayPin && slot.getBoundingClientRect().bottom < 0);
     window.addEventListener('scroll', check, { passive: true, signal: page.signal });
+    window.addEventListener('resize', () => frame.classList.contains('pinned') && place(), {
+      signal: page.signal,
+    });
     document.addEventListener('astro:before-swap', () => page.abort(), { once: true });
   }
 
