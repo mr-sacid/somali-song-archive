@@ -58,3 +58,16 @@ The schema lives in `src/content.config.ts`. The build fails with a clear messag
 3. Every push to `main` builds and publishes the site at `https://<user>.github.io/<repo>/`.
 
 The base path is worked out from the repository name in `astro.config.mjs`. For a custom domain, set `site` to the domain and `base` to `/` there.
+
+### Optional extras for an entry
+
+```yaml
+summary: One or two plain sentences on what the piece says. Shown under the title.
+glossary:                      # words a reader can tap in the Somali text
+  - word: eridhaban
+    forms: [eridhaban]         # the exact spellings used in the text, if different from `word`
+    say: eh-ri-dha-ban         # rough pronunciation for English speakers
+    meaning: A nursing mother camel separated from her calf.
+```
+
+In the notes, start each part with a `###` heading. On the page each part folds under its heading.

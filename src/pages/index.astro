@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import SongRow from '../components/SongRow.astro';
-import { getSongs, link, stanzas, unique } from '../lib/songs';
+import { getSongs, link, stanzas, thumb, unique } from '../lib/songs';
 
 const songs = await getSongs();
 const poets = unique(songs.map((s) => s.data.poet));
@@ -13,8 +13,10 @@ const filterLink = (key: string, value: string) =>
   link(`/songs/?${key}=${encodeURIComponent(value)}`);
 const countBy = (test: (s: (typeof songs)[number]) => boolean) => songs.filter(test).length;
 
-// A verse to feature: the opening stanza of the first translated entry.
-const featured = songs.find((s) => s.data.english);
+// The song a first-time visitor is sent to: the first with a recording and a translation.
+const featured =
+  songs.find((s) => thumb(s) && s.data.english) ?? songs.find((s) => s.data.english) ?? songs[0];
+const featuredImage = featured && thumb(featured);
 const marquee = [...genres, ...themes];
 ---
 
@@ -26,12 +28,16 @@ const marquee = [...genres, ...themes];
       <span class="line"><span style="--i:2"><em>kept</em> and translated.</span></span>
     </h1>
     <p class="lead rise" style="--i:4">
-      Heeso, gabayo and buraanbur, each shown in Somali beside its English translation, with notes
-      on the poet, the singer and the story behind it.
+      Listen to Somali songs while you read the words in Somali and English, line for line, with
+      the images and old words explained.
     </p>
-    <a class="cta rise" style="--i:5" href={link('/songs/')}>
-      Browse the archive <span aria-hidden="true">→</span>
-    </a>
+    {
+      featured && (
+        <a class="cta rise" style="--i:5" href={link(`/songs/${featured.id}/`)}>
+          Start with a song <span aria-hidden="true">→</span>
+        </a>
+      )
+    }
   </section>
 
   <div class="marquee rise" style="--i:6" aria-hidden="true">
@@ -48,32 +54,72 @@ const marquee = [...genres, ...themes];
     </div>
   </div>
 
+  {
+    featured && (
+      <section class="wrap section start feature" data-reveal>
+        {featuredImage && (
+          <a class="media" href={link(`/songs/${featured.id}/`)} aria-label={`Listen to ${featured.data.title}`}>
+            <img src={featuredImage} alt="" loading="lazy" />
+            <span class="play" aria-hidden="true" />
+          </a>
+        )}
+        <div>
+          <p class="eyebrow">Start here</p>
+          <blockquote lang="so">
+            {stanzas(featured.data.somali)[0].split(/\r?\n/).map((line) => (
+              <span style="display:block">{line}</span>
+            ))}
+          </blockquote>
+          <p class="trans">
+            {stanzas(featured.data.english)[0]?.split(/\r?\n/).map((line) => (
+              <span style="display:block">{line}</span>
+            ))}
+          </p>
+          <a class="ul on by" href={link(`/songs/${featured.id}/`)}>
+            {featured.data.title}, sung by {featured.data.singer ?? featured.data.poet} →
+          </a>
+        </div>
+      </section>
+    )
+  }
+
   <section class="wrap section">
-    <ul class="stats">
+    <div class="section-head" data-reveal>
+      <h2 class="eyebrow">How it works</h2>
+    </div>
+    <ol class="steps">
       <li data-reveal>
-        <strong>{songs.length}</strong>
-        <span class="eyebrow">{songs.length === 1 ? 'Entry' : 'Entries'}</span>
+        <h3>Listen</h3>
+        <p>Press play. When you scroll down to read, the video follows you in the corner.</p>
       </li>
       <li data-reveal style="--i:1">
-        <strong>{poets.length}</strong>
-        <span class="eyebrow">{poets.length === 1 ? 'Poet' : 'Poets'}</span>
+        <h3>Read</h3>
+        <p>The Somali and the English sit side by side, stanza by stanza. Show one or both.</p>
       </li>
       <li data-reveal style="--i:2">
-        <strong>{singers.length}</strong>
-        <span class="eyebrow">{singers.length === 1 ? 'Singer' : 'Singers'}</span>
+        <h3>Tap</h3>
+        <p>Dotted words open their meaning and how to say them. The notes explain the rest.</p>
       </li>
-    </ul>
+    </ol>
   </section>
 
   {
-    featured && (
-      <section class="wrap section feature" data-reveal>
-        <p class="eyebrow">A verse from the archive</p>
-        <blockquote lang="so">{stanzas(featured.data.somali)[0]}</blockquote>
-        <p class="trans">{stanzas(featured.data.english)[0]}</p>
-        <a class="ul on by" href={link(`/songs/${featured.id}/`)}>
-          {featured.data.title}, {featured.data.poet} →
-        </a>
+    songs.length >= 4 && (
+      <section class="wrap section">
+        <ul class="stats">
+          <li data-reveal>
+            <strong>{songs.length}</strong>
+            <span class="eyebrow">Entries</span>
+          </li>
+          <li data-reveal style="--i:1">
+            <strong>{poets.length}</strong>
+            <span class="eyebrow">{poets.length === 1 ? 'Poet' : 'Poets'}</span>
+          </li>
+          <li data-reveal style="--i:2">
+            <strong>{singers.length}</strong>
+            <span class="eyebrow">{singers.length === 1 ? 'Singer' : 'Singers'}</span>
+          </li>
+        </ul>
       </section>
     )
   }

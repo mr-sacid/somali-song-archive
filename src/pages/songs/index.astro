@@ -22,7 +22,11 @@ const filters = [
       </p>
     </header>
 
-    <form class="filters rise" style="--i:3" id="filters" aria-label="Filter entries">
+    <form class="filters rise" style="--i:3" id="filters" aria-label="Search and filter entries">
+      <label class="search eyebrow">
+        Search
+        <input type="search" name="q" placeholder="A title, a poet, a singer, a line…" autocomplete="off" />
+      </label>
       {
         filters.map((f) => (
           <label class="eyebrow">
@@ -48,6 +52,20 @@ const filters = [
             data-genre={song.data.genre}
             data-decade={decadeOf(song.data)}
             data-theme={song.data.themes.join('|')}
+            data-search={[
+              song.data.title,
+              song.data.title_en,
+              song.data.poet,
+              song.data.singer,
+              song.data.genre,
+              ...song.data.themes,
+              song.data.somali,
+              song.data.english,
+            ]
+              .filter(Boolean)
+              .join(' ')
+              .toLowerCase()
+              .replace(/\s+/g, ' ')}
           >
             <SongRow song={song} index={i} />
           </li>
@@ -68,9 +86,11 @@ const filters = [
     const count = document.querySelector('#count')!;
     const empty = document.querySelector<HTMLElement>('#empty')!;
     const select = (key: string) => form.elements.namedItem(key) as HTMLSelectElement;
+    const search = form.elements.namedItem('q') as HTMLInputElement;
 
     // Pre-select filters from the URL, e.g. /songs/?genre=Gabay
     const params = new URLSearchParams(location.search);
+    search.value = params.get('q') ?? '';
     for (const key of keys) {
       const value = params.get(key);
       if (value && [...select(key).options].some((o) => o.value === value)) {
@@ -82,20 +102,25 @@ const filters = [
       const active = keys.map((key) => [key, select(key).value] as const).filter(([, v]) => v);
       for (const key of keys) select(key).classList.toggle('on', Boolean(select(key).value));
 
+      const term = search.value.trim().toLowerCase();
       let shown = 0;
       for (const item of items) {
-        const match = active.every(([key, value]) =>
-          key === 'theme'
-            ? (item.dataset.theme ?? '').split('|').includes(value)
-            : item.dataset[key] === value,
-        );
+        const match =
+          (!term || (item.dataset.search ?? '').includes(term)) &&
+          active.every(([key, value]) =>
+            key === 'theme'
+              ? (item.dataset.theme ?? '').split('|').includes(value)
+              : item.dataset[key] === value,
+          );
         item.hidden = !match;
         if (match) shown++;
       }
       count.textContent = `${shown} ${shown === 1 ? 'entry' : 'entries'}`;
       empty.hidden = shown > 0;
 
-      const query = new URLSearchParams(active.map(([k, v]) => [k, v])).toString();
+      const entries: [string, string][] = active.map(([k, v]) => [k, v]);
+      if (term) entries.unshift(['q', search.value.trim()]);
+      const query = new URLSearchParams(entries).toString();
       history.replaceState(history.state, '', query ? `?${query}` : location.pathname);
     }
 
@@ -107,6 +132,8 @@ const filters = [
       else update();
     }
 
+    search.addEventListener('input', update);
+    form.addEventListener('submit', (event) => event.preventDefault());
     form.addEventListener('change', animate);
     form.addEventListener('reset', () => setTimeout(animate));
     update();

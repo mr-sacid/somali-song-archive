@@ -1,5 +1,5 @@
 ---
-import { link, type Song } from '../lib/songs';
+import { link, thumb, type Song } from '../lib/songs';
 
 interface Props {
   song: Song;
@@ -7,10 +7,19 @@ interface Props {
 }
 const { song, index } = Astro.props;
 const d = song.data;
+const image = thumb(song);
 ---
 
 <a class="row" href={link(`/songs/${song.id}/`)}>
-  <span class="num">{String(index + 1).padStart(2, '0')}</span>
+  <span class="lead">
+    {
+      image ? (
+        <img src={image} alt="" loading="lazy" />
+      ) : (
+        <span class="num">{String(index + 1).padStart(2, '0')}</span>
+      )
+    }
+  </span>
   <span class="title">
     <span class="so" lang="so" transition:name={`title-${song.id}`}>{d.title}</span>
     {d.title_en && <span class="en">{d.title_en}</span>}

@@ -636,7 +636,6 @@ a {
   border-top: 1px solid var(--line);
 }
 .stanza p {
-  white-space: pre-line;
   font-family: var(--serif);
   font-size: clamp(1.15rem, 1.7vw, 1.35rem);
   line-height: 1.65;
@@ -771,12 +770,12 @@ a {
   max-width: 46rem;
   margin-bottom: 1rem;
 }
-.versions {
+.seg {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
-.versions button {
+.seg button {
   padding: 0.45rem 0.95rem;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -789,11 +788,11 @@ a {
     color 0.3s,
     border-color 0.3s;
 }
-.versions button:hover {
+.seg button:hover {
   border-color: var(--ink);
   color: var(--ink);
 }
-.versions button[aria-pressed='true'] {
+.seg button[aria-pressed='true'] {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--bg);
@@ -1006,6 +1005,380 @@ a {
 .prose a {
   color: var(--accent);
   text-underline-offset: 0.18em;
+}
+
+/* ---------- Song page: reading tools ---------- */
+.song-head .summary {
+  max-width: 40rem;
+  margin-top: 1.5rem;
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.45;
+}
+.verse-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.gloss,
+.gloss-demo {
+  text-decoration: underline dotted var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.24em;
+}
+.gloss {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.gloss:hover,
+.gloss[aria-expanded='true'] {
+  color: var(--accent);
+}
+.gloss-pop {
+  position: absolute;
+  z-index: 25;
+  width: min(19rem, calc(100vw - 2rem));
+  padding: 1rem 1.15rem 1.1rem;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 14px 40px rgb(0 0 0 / 0.3);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  animation: fade 0.25s var(--ease);
+}
+.gloss-pop strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+.gloss-pop .say {
+  display: block;
+  margin: 0.15rem 0 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.gloss-pop .say:empty {
+  margin-bottom: 0.3rem;
+}
+
+/* Each line of verse is its own block; a line that wraps is indented. */
+.stanza .l {
+  display: block;
+  padding-left: 1.1em;
+  text-indent: -1.1em;
+}
+.stanza .l:empty {
+  display: none;
+}
+
+/* Somali / English / both */
+.verses[data-view='so'] .en,
+.verses[data-view='en'] .so {
+  display: none;
+}
+@media (min-width: 44rem) {
+  .verses:not([data-view='both']) .labels,
+  .verses:not([data-view='both']) .stanza {
+    grid-template-columns: 3rem minmax(0, 40rem);
+  }
+}
+
+.say-key {
+  margin-bottom: 1.5rem;
+  font-size: 0.92rem;
+}
+.say-key summary,
+.commentary summary {
+  cursor: pointer;
+  list-style: none;
+}
+.say-key summary::-webkit-details-marker,
+.commentary summary::-webkit-details-marker {
+  display: none;
+}
+.say-key summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.say-key summary:hover {
+  color: var(--ink);
+}
+.say-key summary::before,
+.commentary summary::after {
+  content: '+';
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--accent);
+}
+.say-key[open] summary::before,
+.commentary details[open] summary::after {
+  content: '–';
+}
+.say-key > p {
+  max-width: 40rem;
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+.say-key dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0.9rem 2rem;
+  margin: 1rem 0 0;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.say-key dt {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+.say-key dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Commentary folds under its headings */
+.commentary details {
+  border-bottom: 1px solid var(--line);
+}
+.commentary details:first-child {
+  border-top: 1px solid var(--line);
+}
+.commentary summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.1rem;
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  transition: color 0.3s;
+}
+.commentary summary:hover {
+  color: var(--accent);
+}
+.commentary details > div {
+  padding-bottom: 1.6rem;
+}
+.notes .credit {
+  margin-top: 1.5rem;
+}
+
+.words {
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+.glossary {
+  display: grid;
+  gap: 1.1rem;
+  margin-block: 0;
+}
+.glossary dt {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+.glossary .say {
+  margin-left: 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.glossary dd {
+  margin: 0.1rem 0 0;
+  color: var(--muted);
+}
+
+/* Phones: more air between stanzas, and a clear line between the two languages */
+@media (max-width: 43.99rem) {
+  .stanza {
+    gap: 1.25rem;
+    padding-block: 2.5rem;
+  }
+  .stanza .n {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .stanza .so {
+    font-size: 1.25rem;
+    line-height: 1.7;
+  }
+  .stanza .en {
+    padding-left: 1rem;
+    border-left: 2px solid var(--line);
+    font-size: 1.05rem;
+    font-style: normal;
+    line-height: 1.7;
+  }
+  .verses[data-view='en'] .en {
+    padding-left: 0;
+    border-left: 0;
+    color: var(--ink);
+    font-size: 1.2rem;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+  }
+  .notes .body,
+  .prose {
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+  .seg button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ---------- Home: start here ---------- */
+.start {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 4rem);
+  align-items: center;
+}
+@media (min-width: 52rem) {
+  .start {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #000;
+}
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition:
+    opacity 0.4s,
+    scale 0.9s var(--ease);
+}
+.media:hover img {
+  opacity: 1;
+  scale: 1.03;
+}
+.media:hover .play {
+  scale: 1.1;
+}
+.start blockquote,
+.start .trans {
+  white-space: normal;
+}
+.start blockquote {
+  margin: 1.25rem 0 1rem;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 2rem clamp(1.5rem, 4vw, 3.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.steps li {
+  counter-increment: step;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.steps li::before {
+  content: '0' counter(step);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+.steps h3 {
+  margin: 0.6rem 0 0.4rem;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+.steps p {
+  color: var(--muted);
+}
+
+/* ---------- Archive: search and thumbnails ---------- */
+.search {
+  grid-column: 1 / -1;
+}
+.search input {
+  width: 100%;
+  padding: 0.6rem 0 0.8rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+  font: 400 clamp(1.3rem, 2.6vw, 1.75rem) var(--serif);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  transition: border-color 0.3s;
+}
+.search input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.row {
+  grid-template-columns: 5.5rem minmax(0, 1fr) 1.5rem;
+  column-gap: 1rem;
+  align-items: start;
+}
+.row .lead {
+  grid-row: 1 / span 2;
+}
+.row .lead img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--line);
+}
+@media (min-width: 56rem) {
+  .row {
+    grid-template-columns: 8rem minmax(0, 1fr) 15rem 7rem 3.5rem 1.5rem;
+    column-gap: 1.5rem;
+    align-items: center;
+  }
+  .row .lead {
+    grid-row: auto;
+  }
 }
 
 /* ---------- Reduced motion ---------- */

@@ -6,6 +6,60 @@ singer: Xabiiba Xassan Tooxow
 genre: Hees
 decade: 1980s
 themes: [Love, Longing]
+summary: A woman tells the man she loves that he has wounded her heart. She compares her longing to a mother camel crying for her lost calf, and asks him to marry her.
+glossary:
+  - word: uur
+    forms: [Uurkiyo]
+    say: oor
+    meaning: The belly or womb, where Somali places deep feeling.
+  - word: eel
+    forms: [Eelkad]
+    say: ayl
+    meaning: A wound, or the painful mark one leaves behind.
+  - word: bogsoon
+    say: bog-sohn
+    meaning: To heal.
+  - word: eridhaban
+    say: eh-ri-dha-ban
+    meaning: A nursing mother camel separated from her calf, who leaves the herd and cries for it.
+  - word: olol
+    say: o-lol
+    meaning: The loud bellow of a camel separated from her calf or herd.
+  - word: aayatin
+    say: aa-ya-tin
+    meaning: The future, or destiny.
+  - word: ohin
+    say: o-hin
+    meaning: Crying.
+  - word: arami
+    forms: [Aramida]
+    say: a-ra-mi
+    meaning: A chronic, deep-seated ache from an old wound or illness, one that flares up from time to time.
+  - word: anbadayee
+    say: an-ba-da-yeh
+    meaning: I have lost my way.
+  - word: ay
+    forms: [Ayda]
+    say: eye
+    meaning: Dense forest or bushland.
+  - word: unugyada
+    say: u-nug-ya-da
+    meaning: The cells of the body.
+  - word: ofaha
+    say: o-fa-ha
+    meaning: The ribcage.
+  - word: alkunto
+    forms: [alkuntoo]
+    say: al-kun-to
+    meaning: To seek a partner for the sake of marriage.
+  - word: anfaco
+    forms: [Anfacadhi]
+    say: an-fa-o, with a catch in the throat before the o
+    meaning: Food, nourishment.
+  - word: aqal gal
+    forms: [aqal galnee]
+    say: a-qal gal, the q far back in the throat
+    meaning: Literally to enter a house, and so to marry.
 videos:
   - url: https://youtu.be/Qxz9mEJAkLM
     label: Gofadhe Lyrics
@@ -184,23 +238,3 @@ He is a poet, musician, actor and singer, and wrote plays as well as songs, amon
 This was not his only song for Xabiiba Xassan Tooxow. She also sang his *Ixtiraam Gobeed* and *Ergo Dumar*.
 
 These details come from the profile by Cabdinaasir Xiddig listed in the sources.
-
-### Words
-
-**Eridhaban** is a nursing mother camel separated from her calf, who leaves the herd and cries for it.
-
-**Alkunto** is to seek a partner for the sake of marriage.
-
-**Eel** is a wound, or the painful mark one leaves behind.
-
-**Arami** is a chronic, deep-seated ache from an old wound or illness, one that flares up from time to time.
-
-**Ay** is dense forest or bushland.
-
-**Olol** is the loud bellow of a camel separated from her calf or herd.
-
-**Aqal gal** is literally to enter a house, and so to marry.
-
-**Aayatin** is the future, or destiny.
-
-**Ofaha** is the ribcage.

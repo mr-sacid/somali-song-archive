@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { decadeOf, getSongs, link, stanzas, youtubeId, type Song } from '../../lib/songs';
+import { annotate, decadeOf, getSongs, link, stanzas, youtubeId, type Song } from '../../lib/songs';
 
 export async function getStaticPaths() {
   const songs = await getSongs();
@@ -23,23 +23,37 @@ const { Content } = await render(song);
 const so = stanzas(d.somali);
 const en = stanzas(d.english);
 const rows = Array.from({ length: Math.max(so.length, en.length) }, (_, i) => ({
-  so: so[i],
-  en: en[i],
+  so: (so[i] ?? '').split(/\r?\n/),
+  en: (en[i] ?? '').split(/\r?\n/),
 }));
 const filterLink = (key: string, value: string) =>
   link(`/songs/?${key}=${encodeURIComponent(value)}`);
-const hasNotes = Boolean(song.body?.trim()) || d.translator || d.source;
+const hasBody = Boolean(song.body?.trim());
+const hasNotes = hasBody || d.translator || d.source;
 const videos = d.videos
   .map((v, i) => ({ id: youtubeId(v.url), label: v.label ?? `Recording ${i + 1}` }))
   .filter((v) => v.id);
+
+// How Somali letters sound, for readers new to the language.
+const letters = [
+  ['aa ee ii oo uu', 'A doubled vowel is the same vowel held longer.'],
+  ['x', 'A strong, breathy h from deep in the throat.'],
+  ['c', 'A tight sound squeezed from the throat. If it is new to you, a slight pause will do.'],
+  ['q', 'A k made as far back in the throat as you can.'],
+  ['dh', 'A d with the tip of the tongue curled back.'],
+  ['kh', 'Like the ch in the Scottish “loch”.'],
+  ['’', 'A brief catch in the throat, as in the middle of “uh-oh”.'],
+  ['g j r', 'G is always hard, as in “go”. J is as in “jam”. R is rolled.'],
+];
 ---
 
-<Base title={d.title} description={d.title_en ? `${d.title} (${d.title_en}) by ${d.poet}` : `${d.title} by ${d.poet}`}>
+<Base title={d.title} description={d.summary ?? (d.title_en ? `${d.title} (${d.title_en}) by ${d.poet}` : `${d.title} by ${d.poet}`)}>
   <article class="wrap">
     <header class="song-head">
       <a class="back ul rise" href={link('/songs/')}>← Archive</a>
       <h1 class="display" lang="so" transition:name={`title-${song.id}`}>{d.title}</h1>
       {d.title_en && <p class="en-title rise" style="--i:1">{d.title_en}</p>}
+      {d.summary && <p class="summary rise" style="--i:2">{d.summary}</p>}
       <dl class="facts rise" style="--i:2">
         <div>
           <dt class="eyebrow">Poet</dt>
@@ -84,7 +98,7 @@ const videos = d.videos
           <div class="listen-head">
             <h2 class="eyebrow">Listen</h2>
             {videos.length > 1 && (
-              <div class="versions" role="group" aria-label="Choose a recording">
+              <div class="seg" role="group" aria-label="Choose a recording">
                 {videos.map((v, i) => (
                   <button type="button" data-video={v.id} aria-pressed={i === 0 ? 'true' : 'false'}>
                     {v.label}
@@ -114,32 +128,116 @@ const videos = d.videos
       )
     }
 
-    <section class="verses" aria-label="Text and translation">
+    <section class="verses" data-verses data-view="both" aria-label="Text and translation">
+      <div class="verse-tools">
+        {
+          en.length > 0 && (
+            <div class="seg" role="group" aria-label="Show">
+              <button type="button" data-view="both" aria-pressed="true">Both</button>
+              <button type="button" data-view="so" aria-pressed="false">Af-Soomaali</button>
+              <button type="button" data-view="en" aria-pressed="false">English</button>
+            </div>
+          )
+        }
+        {
+          d.glossary.length > 0 && (
+            <p class="hint">
+              Tap a <span class="gloss-demo">dotted word</span> for its meaning and how to say it.
+            </p>
+          )
+        }
+      </div>
+
+      <details class="say-key">
+        <summary>How to say Somali letters</summary>
+        <p>
+          Somali is written as it sounds, in the Latin alphabet. Most letters are said as in English.
+          These are the ones that are not.
+        </p>
+        <dl>
+          {
+            letters.map(([letter, how]) => (
+              <div>
+                <dt lang="so">{letter}</dt>
+                <dd>{how}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </details>
+
       <div class="labels eyebrow" aria-hidden="true">
         <span></span>
-        <span>Af-Soomaali</span>
-        <span>English</span>
+        <span class="so">Af-Soomaali</span>
+        <span class="en">English</span>
       </div>
       {
         rows.map((row, i) => (
           <div class="stanza" data-reveal>
             <span class="n">{String(i + 1).padStart(2, '0')}</span>
-            <p class="so" lang="so">{row.so}</p>
-            <p class="en">{row.en}</p>
+            <p class="so" lang="so">
+              {row.so.map((line) => (
+                <span class="l">
+                  {annotate(line, d.glossary).map((seg) =>
+                    typeof seg === 'string' ? (
+                      seg
+                    ) : (
+                      <button
+                        type="button"
+                        class="gloss"
+                        data-word={seg.gloss.word}
+                        data-say={seg.gloss.say}
+                        data-meaning={seg.gloss.meaning}
+                      >{seg.text}</button>
+                    ),
+                  )}
+                </span>
+              ))}
+            </p>
+            <p class="en">
+              {row.en.map((line) => <span class="l">{line}</span>)}
+            </p>
           </div>
         ))
       }
     </section>
 
+    <div class="gloss-pop" id="gloss-pop" role="status" hidden>
+      <strong lang="so"></strong>
+      <span class="say"></span>
+      <p></p>
+    </div>
+
     {
       hasNotes && (
         <section class="notes section" data-reveal>
-          <h2 class="eyebrow">Notes</h2>
+          <h2 class="eyebrow">About this song</h2>
           <div class="body">
-            <Content />
+            <div class="commentary">
+              <Content />
+            </div>
             {d.translator && <p class="credit">Translated by {d.translator}.</p>}
             {d.source && <p class="credit">Source: {d.source}</p>}
           </div>
+        </section>
+      )
+    }
+
+    {
+      d.glossary.length > 0 && (
+        <section class="notes words" data-reveal>
+          <h2 class="eyebrow">Words</h2>
+          <dl class="body glossary">
+            {d.glossary.map((g) => (
+              <div>
+                <dt lang="so">
+                  {g.word}
+                  {g.say && <span class="say">{g.say}</span>}
+                </dt>
+                <dd>{g.meaning}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
       )
     }
@@ -184,14 +282,14 @@ const videos = d.videos
 <script>
   // Video player: loads YouTube only when play is pressed, switches between
   // recordings, and docks itself in the corner once you scroll down to read.
-  function initPlayer() {
+  function initPlayer(page: AbortSignal) {
     const root = document.querySelector<HTMLElement>('[data-player]');
     if (!root) return;
     const slot = root.querySelector<HTMLElement>('.player-slot')!;
     const frame = root.querySelector<HTMLElement>('.player-frame')!;
     const unpin = root.querySelector<HTMLButtonElement>('.unpin')!;
     const bar = root.querySelector<HTMLElement>('.dock-bar')!;
-    const versions = [...root.querySelectorAll<HTMLButtonElement>('.versions button')];
+    const versions = [...root.querySelectorAll<HTMLButtonElement>('.seg button')];
     let current = root.querySelector<HTMLElement>('.poster')!.dataset.video!;
     let playing = false;
     let mayPin = true;
@@ -285,19 +383,109 @@ const videos = d.videos
       spot = { x: box.left + by[0], y: box.top + by[1] };
       place();
     });
+
     unpin.addEventListener('click', () => {
       mayPin = false;
       setPinned(false);
     });
+
     // Dock once the player's place has scrolled off the top; undock when it returns.
-    const page = new AbortController();
     const check = () => setPinned(playing && mayPin && slot.getBoundingClientRect().bottom < 0);
-    window.addEventListener('scroll', check, { passive: true, signal: page.signal });
+    window.addEventListener('scroll', check, { passive: true, signal: page });
     window.addEventListener('resize', () => frame.classList.contains('pinned') && place(), {
-      signal: page.signal,
+      signal: page,
     });
-    document.addEventListener('astro:before-swap', () => page.abort(), { once: true });
   }
 
-  document.addEventListener('astro:page-load', initPlayer);
+  // Show Somali, English or both, and remember the choice.
+  function initViews() {
+    const verses = document.querySelector<HTMLElement>('[data-verses]');
+    if (!verses) return;
+    const buttons = [...verses.querySelectorAll<HTMLButtonElement>('.verse-tools .seg button')];
+    const show = (view: string) => {
+      verses.dataset.view = view;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+    };
+    try {
+      const saved = localStorage.getItem('verse-view');
+      if (saved && buttons.some((b) => b.dataset.view === saved)) show(saved);
+    } catch {}
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        show(button.dataset.view!);
+        try {
+          localStorage.setItem('verse-view', button.dataset.view!);
+        } catch {}
+      });
+    }
+  }
+
+  // Tap a dotted word to see its meaning and how to say it.
+  function initGlossary(page: AbortSignal) {
+    const pop = document.querySelector<HTMLElement>('#gloss-pop');
+    if (!pop) return;
+    let openFor: HTMLElement | null = null;
+    const close = () => {
+      pop.hidden = true;
+      openFor?.setAttribute('aria-expanded', 'false');
+      openFor = null;
+    };
+    document.addEventListener(
+      'click',
+      (event) => {
+        const word = (event.target as HTMLElement).closest<HTMLElement>('.gloss');
+        if (!word) {
+          if (!(event.target as HTMLElement).closest('#gloss-pop')) close();
+          return;
+        }
+        if (openFor === word) return close();
+        close();
+        pop.querySelector('strong')!.textContent = word.dataset.word ?? '';
+        pop.querySelector('.say')!.textContent = word.dataset.say ? `Say: ${word.dataset.say}` : '';
+        pop.querySelector('p')!.textContent = word.dataset.meaning ?? '';
+        pop.hidden = false;
+        const box = word.getBoundingClientRect();
+        const width = pop.offsetWidth;
+        const left = Math.min(Math.max(box.left, 16), document.documentElement.clientWidth - width - 16);
+        pop.style.left = `${left + window.scrollX}px`;
+        pop.style.top = `${box.bottom + window.scrollY + 10}px`;
+        word.setAttribute('aria-expanded', 'true');
+        openFor = word;
+      },
+      { signal: page },
+    );
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && close(), { signal: page });
+  }
+
+  // Fold each part of the commentary under its heading, first one open.
+  function initCommentary() {
+    const body = document.querySelector<HTMLElement>('.commentary');
+    if (!body || body.dataset.folded) return;
+    body.dataset.folded = 'true';
+    const heads = [...body.querySelectorAll<HTMLElement>(':scope > h3')];
+    heads.forEach((head, i) => {
+      const details = document.createElement('details');
+      details.open = i === 0;
+      const summary = document.createElement('summary');
+      summary.textContent = head.textContent;
+      const inner = document.createElement('div');
+      let node = head.nextSibling;
+      while (node && !(node instanceof HTMLElement && node.tagName === 'H3')) {
+        const next = node.nextSibling;
+        inner.append(node);
+        node = next;
+      }
+      details.append(summary, inner);
+      head.replaceWith(details);
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const page = new AbortController();
+    document.addEventListener('astro:before-swap', () => page.abort(), { once: true });
+    initPlayer(page.signal);
+    initViews();
+    initGlossary(page.signal);
+    initCommentary();
+  });
 </script>
